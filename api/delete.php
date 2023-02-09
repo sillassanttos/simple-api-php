@@ -4,7 +4,7 @@ require('../config.php');
 
 $method = strtolower($_SERVER['REQUEST_METHOD']);
 
-if ($method === 'get') {
+if ($method === 'delete') {
 
   $id = filter_input(INPUT_GET, 'id');
 
@@ -16,15 +16,9 @@ if ($method === 'get') {
 
     if ($sql->rowCount() > 0) {
 
-      $data = $sql->fetch(PDO::FETCH_ASSOC);
-
-      $array['result'] = [
-        'id' => $data['id'],
-        'nome' => $data['nome'],
-        'codigo' => $data['codigo'],
-        'tipo_cobranca' => $data['tipo_cobranca'],
-        'situacao' => $data['situacao']
-      ];
+      $sql = $pdo->prepare("delete from banco where id = :id");
+      $sql->bindValue(':id', $id);
+      $sql->execute();
 
     } else {
       $array['error'] = 'ID inexistente';
